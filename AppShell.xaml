@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="MauiAppDotNet8.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:MauiAppDotNet8"    
+    Title="MauiAppDotNet8">
+
+    <ShellContent 
+        Title="Home"
+        ContentTemplate="{DataTemplate local:MainPage}"
+        FlyoutItemIsVisible="False"
+        Route="MainPage" />
+
+    <!-- The property IsVisible is not present for MenuItem here (but available for ShellContent above) -->
+    <!-- The property FlyoutItemIsVisible is not present for MenuItem here (but available for ShellContent above) -->
+    <!-- I tried the property FlyoutItem.IsVisible here, but it doesn't work to hide/show the MenuItem -->
+    <!-- How to decide at design time (here) to hide or show a MenuItem?  -->
+    <MenuItem ClassId="mnuLogin"      x:Name="mnuLogin"      Text="Login"      Clicked="MenuItem_Clicked" FlyoutItem.IsVisible="True" />
+    <MenuItem ClassId="mnuLogout"     x:Name="mnuLogout"     Text="Logout"     Clicked="MenuItem_Clicked" FlyoutItem.IsVisible="False"/>
+    <MenuItem ClassId="mnuConnect"    x:Name="mnuConnect"    Text="Connect"    Clicked="MenuItem_Clicked" FlyoutItem.IsVisible="False"/>
+    <MenuItem ClassId="mnuDisconnect" x:Name="mnuDisconnect" Text="Disconnect" Clicked="MenuItem_Clicked" FlyoutItem.IsVisible="False"/>
+    <MenuItem ClassId="mnuSettings"   x:Name="mnuSettings"   Text="Settings"   Clicked="MenuItem_Clicked" FlyoutItem.IsVisible="False"/>
+    <MenuItem ClassId="mnuAbout"      x:Name="mnuAbout"      Text="About"      Clicked="MenuItem_Clicked" FlyoutItem.IsVisible="True" />
+</Shell>
