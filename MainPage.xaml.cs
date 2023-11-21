@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Reflection;
 
 namespace MauiAppDotNet8;
 
@@ -22,36 +23,27 @@ public partial class MainPage : ContentPage
     {
         if (Application.Current?.MainPage is not Shell shell) { return; }
 
-        //-------------------------------------------------------------------------------------------------------------
-        // How to enumerate all the MenuItems of the Shell object and decide which one to hide/show programmatically ?
-        //-------------------------------------------------------------------------------------------------------------
-        foreach (var item in shell.Items)
+        foreach (ShellItem item in shell.Items)
         {
             Debug.WriteLine($"item.GetType(): {item.GetType()} | item.ClassId: {item.ClassId}");
 
-            // Is it a MenuItem of the Shell object ?
+            if (item is null) { continue; }
+
+            // Is it a MenuShellItem ?
             if (item.GetType().ToString().EqualsIgnoreCase("Microsoft.Maui.Controls.MenuShellItem"))
             {
-                // NOTE: ClassId here is from MenuShellItem (internal class, not public) and not MenuItem. How To get the one from MenuItem?
-                if (item.ClassId is null)                
-                {
-                    Debug.WriteLine("item.ClassId is null !!!");
+                // MenuShellItem
+                Type msiType = item.GetType();
+                PropertyInfo? mi = msiType.GetProperty("MenuItem");
+                if (mi is null) { continue; }
+                if (mi.GetValue(item) is not MenuItem m) { continue; }
 
-                    // NOTE: item.IsVisible DOES work here to show/hide the MenuItem.
-                    //item.IsVisible = false;
-
-                    continue;
-                }
-
-                // This code is never executed - How to identify which MenuItem is item (if ClassId is null and it is not from MenuItem)?
-
-                if (item.ClassId.EqualsIgnoreCase("mnuLogin"))      { item.IsVisible = !isLogged; }
-                if (item.ClassId.EqualsIgnoreCase("mnuLogout"))     { item.IsVisible = isLogged; }
-                if (item.ClassId.EqualsIgnoreCase("mnuConnect"))    { item.IsVisible = !isConnected; }
-                if (item.ClassId.EqualsIgnoreCase("mnuDisconnect")) { item.IsVisible = isConnected; }
-                if (item.ClassId.EqualsIgnoreCase("mnuSettings"))   { item.IsVisible = isAdmin; }
+                if (m.ClassId.EqualsIgnoreCase("mnuLogin")) { item.IsVisible = !isLogged; }
+                if (m.ClassId.EqualsIgnoreCase("mnuLogout")) { item.IsVisible = isLogged; }
+                if (m.ClassId.EqualsIgnoreCase("mnuConnect")) { item.IsVisible = !isConnected; }
+                if (m.ClassId.EqualsIgnoreCase("mnuDisconnect")) { item.IsVisible = isConnected; }
+                if (m.ClassId.EqualsIgnoreCase("mnuSettings")) { item.IsVisible = isAdmin; }
             }
         }
     }
 }
-
